@@ -15,7 +15,7 @@ import java.util.List;
 public class Sucursal {
 
     @Id
-    private int id;
+    private String id;
     private String nombre;
     private List<Producto> productos;
 
