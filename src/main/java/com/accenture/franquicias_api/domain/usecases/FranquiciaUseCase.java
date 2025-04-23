@@ -67,8 +67,25 @@ public class FranquiciaUseCase {
                     return franquicia;
                 })
                 .flatMap(franquiciaRepositoryAdapter::updateFranquicia)
-                .map(ConvertidorDTO::franquiciaToFranquiciaDTO)
                 .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build("No se encontró la Sucursal con nombre: " + nombreSucursal+ " y Producto con nombre: " + nombreProducto)))
+                .map(ConvertidorDTO::franquiciaToFranquiciaDTO)
+                .collectList();
+    }
+
+    public Mono<List<FranquiciaDTO>> actualizarProducto(String nombreProducto, int stock) {
+        return franquiciaRepositoryAdapter.obtenerFranquicias()
+                .filter(franquicia -> franquicia.getSucursales().stream().anyMatch(sucursal ->
+                    sucursal.getProductos().stream().anyMatch(producto -> producto.getNombre().equals(nombreProducto))
+                )).map(franquicia -> {
+                   franquicia.getSucursales().forEach(sucursal -> sucursal.getProductos().forEach(producto -> {
+                       if(producto.getNombre().equals(nombreProducto)) {
+                           producto.setStock(stock);
+                       }
+                   }));
+                   return franquicia;
+               }).flatMap(franquiciaRepositoryAdapter::updateFranquicia)
+                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build("No se encontró producto con nombre: " + nombreProducto )))
+                .map(ConvertidorDTO::franquiciaToFranquiciaDTO)
                 .collectList();
     }
 }
