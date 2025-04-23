@@ -84,4 +84,13 @@ public class FranquiciaController {
                         .body(defaultResponseMapper.buildDefaultServiceResponse(response)))
                 );
     }
+
+    @PatchMapping(path = "/actualizar/nombreProducto", params = {"actualNombreProducto", "nuevoNombreProducto"})
+    public Mono<ResponseEntity<ResponseDTO>> actualizarNombreProducto(@RequestParam("actualNombreProducto") String actualNombreProducto, @RequestParam("nuevoNombreProducto") String nuevoNombreProducto) {
+        return franquiciaUseCase.actualizarNombreProducto(actualNombreProducto, nuevoNombreProducto)
+                .map(response -> (ResponseEntity.status(HttpStatus.CREATED)
+                        .body(defaultResponseMapper.buildDefaultServiceResponse(response)))
+                );
+    }
+
 }

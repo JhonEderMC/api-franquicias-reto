@@ -22,6 +22,7 @@ public class FranquiciaUseCase {
 
     public static final String NO_SE_ENCONTRO_LA_FRANQUICIA_CON_NOMBRE = "No se encontró la franquicia con nombre: ";
     public static final String NO_SE_ENCONTRO_LA_SUCURSAL_CON_NOMBRE = "No se encontró la Sucursal con nombre: ";
+    public static final String NO_SE_ENCONTRO_PRODUCTO_CON_NOMBRE = "No se encontró producto con nombre: ";
     private final FranquiciaRepositoryAdapter franquiciaRepositoryAdapter;
 
     public Mono<FranquiciaDTO> guardarFranquicia(FranquiciaDTO franquiciaDTO) {
@@ -90,7 +91,7 @@ public class FranquiciaUseCase {
                    }));
                    return franquicia;
                }).flatMap(franquiciaRepositoryAdapter::updateFranquicia)
-                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build("No se encontró producto con nombre: " + nombreProducto )))
+                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build(NO_SE_ENCONTRO_PRODUCTO_CON_NOMBRE + nombreProducto )))
                 .map(ConvertidorDTO::franquiciaToFranquiciaDTO)
                 .collectList();
     }
@@ -143,6 +144,22 @@ public class FranquiciaUseCase {
                 }).flatMap(franquiciaRepositoryAdapter::updateFranquicia)
                 .map(ConvertidorDTO::franquiciaToFranquiciaDTO)
                 .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build(NO_SE_ENCONTRO_LA_SUCURSAL_CON_NOMBRE + actualNombreSucursal)))
+                .collectList();
+    }
+
+    public Mono<List<FranquiciaDTO>> actualizarNombreProducto(String actualNombreProducto, String nuevoNombreProducto) {
+        return franquiciaRepositoryAdapter.obtenerFranquicias()
+                .filter(franquicia -> franquicia.getSucursales().stream().anyMatch(sucursal -> sucursal.getProductos().stream().anyMatch(producto -> producto.getNombre().equals(actualNombreProducto))))
+                .map(franquicia ->{
+                    franquicia.getSucursales().forEach(sucursal -> sucursal.getProductos().forEach(producto -> {
+                        if(producto.getNombre().equals(actualNombreProducto)) {
+                            producto.setNombre(nuevoNombreProducto);
+                        }
+                    }));
+                    return franquicia;
+                }).flatMap(franquiciaRepositoryAdapter::updateFranquicia)
+                .map(ConvertidorDTO::franquiciaToFranquiciaDTO)
+                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build(NO_SE_ENCONTRO_PRODUCTO_CON_NOMBRE + actualNombreProducto)))
                 .collectList();
     }
 }
