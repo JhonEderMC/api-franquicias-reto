@@ -130,5 +130,19 @@ public class FranquiciaUseCase {
     }
 
 
-
+    public Mono<List<FranquiciaDTO>> actualizarNombreSucursal(String actualNombreSucursal, String nuevoNombreSucursal) {
+        return franquiciaRepositoryAdapter.obtenerFranquicias()
+                .filter(franquicia -> franquicia.getSucursales().stream().anyMatch(sucursal -> sucursal.getNombre().equals(actualNombreSucursal)))
+                .map(franquicia ->{
+                    franquicia.getSucursales().forEach(sucursal -> {
+                        if(sucursal.getNombre().equals(actualNombreSucursal)) {
+                            sucursal.setNombre(nuevoNombreSucursal);
+                        }
+                    });
+                    return franquicia;
+                }).flatMap(franquiciaRepositoryAdapter::updateFranquicia)
+                .map(ConvertidorDTO::franquiciaToFranquiciaDTO)
+                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build(NO_SE_ENCONTRO_LA_SUCURSAL_CON_NOMBRE + actualNombreSucursal)))
+                .collectList();
+    }
 }
