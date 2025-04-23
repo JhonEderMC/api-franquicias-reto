@@ -3,11 +3,11 @@ spring:
     name: "franquicias-api"
   data:
     mongodb:
-      uri: "mongodb+srv://jhoneder:<db_password>@cluster0.dzcjlnx.mongodb.net/?retryWrites=true&w=majority&appName=franquicias"
-      username: "jhoneder"
-      password: "nGs25zIRE6GfJqM0"
-      cluster-url: "cluster0.dzcjlnx.mongodb.net"
-      database: "franquicias"
+      uri: "${MONGO_DB_URI}"
+      username: "${MONGO_DB_USERNAME}"
+      password: "${MONGO_DB_PASSWORD}"
+      cluster-url: "${MONGO_DB_CLUSTER_URL}"
+      database: "${MONGO_DB_DATABASE}"
 server:
   port: 8080
 api:
