@@ -15,6 +15,7 @@ import java.util.List;
 public class Franquicia {
 
     @Id
+    private String id;
     private String nombre;
     private List<Sucursal> sucursales;
 }
