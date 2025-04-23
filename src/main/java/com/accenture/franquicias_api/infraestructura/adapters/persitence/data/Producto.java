@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Producto {
 
     @Id
-    private String id;
     private String nombre;
     private int stock;
 

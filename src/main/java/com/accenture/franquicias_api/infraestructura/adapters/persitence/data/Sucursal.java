@@ -13,9 +13,7 @@ import java.util.List;
 @Builder
 @Document(collection = "sucursales")
 public class Sucursal {
-
     @Id
-    private String id;
     private String nombre;
     private List<Producto> productos;
 

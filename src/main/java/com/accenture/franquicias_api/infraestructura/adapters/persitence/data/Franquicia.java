@@ -14,8 +14,7 @@ import java.util.List;
 @Document(collection = "franquicias")
 public class Franquicia {
 
-    @Id // TODO: revisar la necesidada luego
-    private String id;
+    @Id
     private String nombre;
     private List<Sucursal> sucursales;
 }
