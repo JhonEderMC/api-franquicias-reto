@@ -1,21 +1,39 @@
-# Etapa de construcción
-FROM eclipse-temurin:22-jdk AS builder
+# Copy gradle files
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+
+# Make the gradle wrapper executable
+RUN chmod +x ./gradlew
+
+# Download dependencies (this layer can be cached)
+RUN ./gradlew dependencies --no-daemon
+
+# Copy source code
+COPY src src
+
+# Build the application
+RUN ./gradlew build -x test --no-daemon
+
+# Stage 2: Run the application
+FROM eclipse-temurin:22-jre
 
 WORKDIR /app
 
-# Copiamos los archivos de gradle/maven y construimos el JAR
-COPY build/libs/*.jar app.jar
+# Copy the built JAR from the build stage
+COPY --from=build /app/build/libs/*.jar app.jar
 
-# Etapa final
-FROM eclipse-temurin:22-jdk-jammy
+# Set environment variable for Render
+ENV PORT=8080
 
-WORKDIR /app
+# Create a non-root user to run the application
+RUN addgroup --system --gid 1001 appgroup && \
+    adduser --system --uid 1001 --ingroup appgroup appuser
+USER appuser
 
-# Copiamos el jar generado
-COPY --from=builder /app/app.jar app.jar
-
-# Puerto por defecto que Render usará (puedes cambiarlo si usas otro)
+# Expose the port the app runs on
 EXPOSE 8080
 
-# Comando para correr la app
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Define the command to run your application
+CMD ["java", "-jar", "app.jar", "--server.port=8080"]
