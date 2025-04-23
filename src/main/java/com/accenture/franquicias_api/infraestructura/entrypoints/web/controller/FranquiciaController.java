@@ -1,6 +1,7 @@
 package com.accenture.franquicias_api.infraestructura.entrypoints.web.controller;
 
 import com.accenture.franquicias_api.application.dto.franquicia.FranquiciaDTO;
+import com.accenture.franquicias_api.application.dto.franquicia.ProductoDTO;
 import com.accenture.franquicias_api.application.dto.franquicia.SucursalDTO;
 import com.accenture.franquicias_api.application.dto.response.ResponseDTO;
 import com.accenture.franquicias_api.domain.usecases.FranquiciaUseCase;
@@ -13,7 +14,7 @@ import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("${api.base.path}/franquicias")
+@RequestMapping("${api.base.path}/franquicia")
 public class FranquiciaController {
 
     private final FranquiciaUseCase franquiciaUseCase;
@@ -27,9 +28,18 @@ public class FranquiciaController {
                 );
     }
 
-    @PostMapping("/{nombre}/sucursal")
-    public Mono<ResponseEntity<ResponseDTO>> agregarSucursal(@PathVariable("nombre") String nombre, @RequestBody SucursalDTO sucursalDTO) {
+    @PostMapping(path = "/agregar/sucursal", params = {"nombre"})
+
+    public Mono<ResponseEntity<ResponseDTO>> agregarSucursal(@RequestParam("nombre") String nombre, @RequestBody SucursalDTO sucursalDTO) {
         return franquiciaUseCase.agregarSucursal(nombre, sucursalDTO)
+                .map(response -> (ResponseEntity.status(HttpStatus.CREATED)
+                        .body(defaultResponseMapper.buildDefaultServiceResponse(response)))
+                );
+    }
+
+    @PostMapping(path = "/agregar/producto/sucursal", params = {"nombreSucursal"})
+    public Mono<ResponseEntity<ResponseDTO>> agregarProductoSucursal(@RequestBody ProductoDTO productoDTO, @RequestParam("nombreSucursal") String nombreSucursal) {
+        return franquiciaUseCase.agregarProducto(productoDTO, nombreSucursal)
                 .map(response -> (ResponseEntity.status(HttpStatus.CREATED)
                         .body(defaultResponseMapper.buildDefaultServiceResponse(response)))
                 );
