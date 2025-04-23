@@ -35,7 +35,7 @@ public class FranquiciaUseCase {
     }
 
 
-    public Mono<List<FranquiciaDTO>> agregarProducto(ProductoDTO productoDTO, String nombreSucursal) {
+    public Mono<List<FranquiciaDTO>> agregarProductoSucurcal(ProductoDTO productoDTO, String nombreSucursal) {
         return franquiciaRepositoryAdapter.obtenerFranquicias()
                 .filter(franquicia -> franquicia.getSucursales().stream().anyMatch(sucursal -> sucursal.getNombre().equals(nombreSucursal)))
                 .map(franquicia -> {
@@ -48,6 +48,27 @@ public class FranquiciaUseCase {
                }).flatMap(franquiciaRepositoryAdapter::updateFranquicia)
                 .map(ConvertidorDTO::franquiciaToFranquiciaDTO)
                 .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build("No se encontró la Sucursal con nombre: " + nombreSucursal)))
+                .collectList();
+    }
+
+    public Mono<List<FranquiciaDTO>> eliminarProductoSucursal(String nombreSucursal, String nombreProducto) {
+        return franquiciaRepositoryAdapter.obtenerFranquicias()
+                .filter(franquicia -> franquicia.getSucursales().stream().anyMatch(sucursal -> {
+                    if(sucursal.getNombre().equals(nombreSucursal)) {
+                        return sucursal.getProductos().stream().anyMatch(producto -> producto.getNombre().equals(nombreProducto));
+                    }
+                    return false;
+                })).map(franquicia -> {
+                    franquicia.getSucursales().forEach(sucursal -> {
+                        if(sucursal.getNombre().equals(nombreSucursal)) {
+                            sucursal.getProductos().removeIf(producto -> producto.getNombre().equals(nombreProducto));
+                        }
+                    });
+                    return franquicia;
+                })
+                .flatMap(franquiciaRepositoryAdapter::updateFranquicia)
+                .map(ConvertidorDTO::franquiciaToFranquiciaDTO)
+                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build("No se encontró la Sucursal con nombre: " + nombreSucursal+ " y Producto con nombre: " + nombreProducto)))
                 .collectList();
     }
 }

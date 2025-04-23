@@ -39,7 +39,15 @@ public class FranquiciaController {
 
     @PostMapping(path = "/agregar/producto/sucursal", params = {"nombreSucursal"})
     public Mono<ResponseEntity<ResponseDTO>> agregarProductoSucursal(@RequestBody ProductoDTO productoDTO, @RequestParam("nombreSucursal") String nombreSucursal) {
-        return franquiciaUseCase.agregarProducto(productoDTO, nombreSucursal)
+        return franquiciaUseCase.agregarProductoSucurcal(productoDTO, nombreSucursal)
+                .map(response -> (ResponseEntity.status(HttpStatus.CREATED)
+                        .body(defaultResponseMapper.buildDefaultServiceResponse(response)))
+                );
+    }
+
+    @DeleteMapping(path = "/eliminar/producto/sucursal", params = {"nombreSucursal", "nombreProducto"})
+    public Mono<ResponseEntity<ResponseDTO>> eliminarProductoSucursal(@RequestParam("nombreSucursal") String nombreSucursal, @RequestParam("nombreProducto") String nombreProducto) {
+        return franquiciaUseCase.eliminarProductoSucursal(nombreSucursal, nombreProducto)
                 .map(response -> (ResponseEntity.status(HttpStatus.CREATED)
                         .body(defaultResponseMapper.buildDefaultServiceResponse(response)))
                 );
