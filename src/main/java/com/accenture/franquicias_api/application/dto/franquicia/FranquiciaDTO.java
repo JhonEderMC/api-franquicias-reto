@@ -1,4 +1,4 @@
-package com.accenture.franquicias_api.application.dto;
+package com.accenture.franquicias_api.application.dto.franquicia;
 
 import lombok.Builder;
 import lombok.Getter;
