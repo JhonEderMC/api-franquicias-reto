@@ -1,11 +1,21 @@
-FROM ubuntu:latest AS build
-RUN apt-get update
-RUN apt-get install openjdk-22-jdk -y
-COPY . .
-RUN ./gradlew bootJar --no-daemon
+# Etapa de construcción
+FROM eclipse-temurin:22-jdk AS builder
 
-FROM openjdk:22-jdk-slim
+WORKDIR /app
+
+# Copiamos los archivos de gradle/maven y construimos el JAR
+COPY build/libs/*.jar app.jar
+
+# Etapa final
+FROM eclipse-temurin:22-jdk-jammy
+
+WORKDIR /app
+
+# Copiamos el jar generado
+COPY --from=builder /app/app.jar app.jar
+
+# Puerto por defecto que Render usará (puedes cambiarlo si usas otro)
 EXPOSE 8080
-COPY --from=build /build/libs/franquicias-api-0.0.1-SNAPSHOT.jar app.jar
 
+# Comando para correr la app
 ENTRYPOINT ["java", "-jar", "app.jar"]
