@@ -1,5 +1,6 @@
 package com.accenture.franquicias_api.infraestructura.adapters.persitence;
 
+import com.accenture.franquicias_api.domain.exception.IntegracionExcepcion;
 import com.accenture.franquicias_api.infraestructura.adapters.persitence.data.Franquicia;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class FranquiciaRepositoryAdapter {
         return mongoTemplate.save(franquicia)
                 .onErrorResume(error -> {
                     logger.error("Error al guardar franquicia: {}", error.getMessage());
-                    return Mono.error(error);
+                    return Mono.error(IntegracionExcepcion.Type.ERROR_DB_TRANSACTION.build(error.getMessage()));
                 });
     }
 
@@ -39,7 +40,7 @@ public class FranquiciaRepositoryAdapter {
                 });
     }
 
-    public Mono<Franquicia> updateFranquicia(String id, Franquicia franquicia) {
+    public Mono<Franquicia> updateFranquicia(String id, Franquicia franquicia) { // TODO: revisaar si se necesita luego
         Query query = Query.query(Criteria.where("id").is(id));
 
         Update update = new Update()
