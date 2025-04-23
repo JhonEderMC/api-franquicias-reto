@@ -1,0 +1,271 @@
+{
+	"info": {
+		"_postman_id": "43fff5f7-9610-4089-9d3f-3737b41f15df",
+		"name": "Accenture Franquicias",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13619370"
+	},
+	"item": [
+		{
+			"name": "Franquicias accenture",
+			"item": [
+				{
+					"name": "Crear Franquicia",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"nombre\": \"franquicia1\",\r\n\t\"sucursales\": [\r\n\t\t{\r\n\t\t\t\"nombre\": \"producto1\",\r\n\t\t\t\"productos\": [\r\n\t\t\t\t{\r\n\t\t\t\t\t\"nombre\": \"leche\",\r\n\t\t\t\t\t\"stock\": 1\r\n\t\t\t\t}\r\n\t\t\t]\r\n\t\t}\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api-franquicias/franquicia",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api-franquicias",
+								"franquicia"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar Sucursal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"producto2\",\r\n    \"productos\": [\r\n        {\r\n            \"nombre\": \"arroz\",\r\n            \"stock\": 3\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api-franquicias/franquicia/agregar/sucursal?nombre=franquicia1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api-franquicias",
+								"franquicia",
+								"agregar",
+								"sucursal"
+							],
+							"query": [
+								{
+									"key": "nombre",
+									"value": "franquicia1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar producto sucursal",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"uva\",\r\n    \"stock\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api-franquicias/franquicia/eliminar/producto/sucursal?nombreSucursal=producto1&nombreProducto=uva",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api-franquicias",
+								"franquicia",
+								"eliminar",
+								"producto",
+								"sucursal"
+							],
+							"query": [
+								{
+									"key": "nombreSucursal",
+									"value": "producto1"
+								},
+								{
+									"key": "nombreProducto",
+									"value": "uva"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar producto",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api-franquicias/franquicia/actualizar/producto?nombreProducto=leche&stock=10",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api-franquicias",
+								"franquicia",
+								"actualizar",
+								"producto"
+							],
+							"query": [
+								{
+									"key": "nombreProducto",
+									"value": "leche"
+								},
+								{
+									"key": "stock",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener producto mayor stock sucurscal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api-franquicias/franquicia/obtener/mayorStock?nombreFranquicia=franquicia10",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api-franquicias",
+								"franquicia",
+								"obtener",
+								"mayorStock"
+							],
+							"query": [
+								{
+									"key": "nombreFranquicia",
+									"value": "franquicia10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar nombre Franquicia",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api-franquicias/franquicia/actualizar/nombreFranquicia?actualNombreFranquicia=franquicia3&nuevoNombreFranquicia=franquicia7",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api-franquicias",
+								"franquicia",
+								"actualizar",
+								"nombreFranquicia"
+							],
+							"query": [
+								{
+									"key": "actualNombreFranquicia",
+									"value": "franquicia3"
+								},
+								{
+									"key": "nuevoNombreFranquicia",
+									"value": "franquicia7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar nombre Sucurcal",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api-franquicias/franquicia/actualizar/nombreSucursal?actualNombreSucursal=sucursal10&nuevoNombreSucursal=sucursal1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api-franquicias",
+								"franquicia",
+								"actualizar",
+								"nombreSucursal"
+							],
+							"query": [
+								{
+									"key": "actualNombreSucursal",
+									"value": "sucursal10"
+								},
+								{
+									"key": "nuevoNombreSucursal",
+									"value": "sucursal1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar nombre Producto",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api-franquicias/franquicia/actualizar/nombreProducto?actualNombreProducto=atun&nuevoNombreProducto=leche",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api-franquicias",
+								"franquicia",
+								"actualizar",
+								"nombreProducto"
+							],
+							"query": [
+								{
+									"key": "actualNombreProducto",
+									"value": "atun"
+								},
+								{
+									"key": "nuevoNombreProducto",
+									"value": "leche"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
