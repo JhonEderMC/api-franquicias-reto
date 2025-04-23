@@ -5,12 +5,15 @@ import com.accenture.franquicias_api.application.dto.franquicia.ProductoDTO;
 import com.accenture.franquicias_api.application.dto.franquicia.SucursalDTO;
 import com.accenture.franquicias_api.domain.exception.IntegracionExcepcion;
 import com.accenture.franquicias_api.infraestructura.adapters.persitence.FranquiciaRepositoryAdapter;
+import com.accenture.franquicias_api.infraestructura.adapters.persitence.data.Producto;
 import com.accenture.franquicias_api.infraestructura.entrypoints.helpers.ConvertidorDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -88,4 +91,22 @@ public class FranquiciaUseCase {
                 .map(ConvertidorDTO::franquiciaToFranquiciaDTO)
                 .collectList();
     }
+
+    public Mono<FranquiciaDTO> obtenerMayorStock(String nombreFranquicia) {
+        return franquiciaRepositoryAdapter.findFranquiciaByName(nombreFranquicia)
+                .switchIfEmpty(Mono.error(
+                        IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build("No se encontró la franquicia con nombre: " + nombreFranquicia)))
+                .map(franquicia -> {
+                    franquicia.getSucursales().forEach(sucursal -> {
+                        Optional<Producto> maxProducto = sucursal.getProductos().stream()
+                                .max(Comparator.comparingInt(Producto::getStock));
+                        sucursal.setProductos(
+                                maxProducto.map(List::of).orElseGet(List::of)
+                        );
+                    });
+                    return franquicia;
+                })
+                .map(ConvertidorDTO::franquiciaToFranquiciaDTO);
+    }
+
 }

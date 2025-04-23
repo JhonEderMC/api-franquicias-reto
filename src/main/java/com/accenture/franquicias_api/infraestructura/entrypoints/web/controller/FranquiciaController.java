@@ -60,4 +60,12 @@ public class FranquiciaController {
                         .body(defaultResponseMapper.buildDefaultServiceResponse(response)))
                 );
     }
+
+    @GetMapping(path = "/obtener/mayorStock", params = {"nombreFranquicia"})
+    public Mono<ResponseEntity<ResponseDTO>> obtenerMayorStock(@RequestParam("nombreFranquicia") String nombreFranquicia) {
+        return franquiciaUseCase.obtenerMayorStock(nombreFranquicia)
+                .map(response -> (ResponseEntity.status(HttpStatus.CREATED)
+                        .body(defaultResponseMapper.buildDefaultServiceResponse(response)))
+                );
+    }
 }
