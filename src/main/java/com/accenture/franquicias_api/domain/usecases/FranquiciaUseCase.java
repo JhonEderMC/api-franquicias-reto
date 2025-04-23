@@ -5,6 +5,7 @@ import com.accenture.franquicias_api.application.dto.franquicia.ProductoDTO;
 import com.accenture.franquicias_api.application.dto.franquicia.SucursalDTO;
 import com.accenture.franquicias_api.domain.exception.IntegracionExcepcion;
 import com.accenture.franquicias_api.infraestructura.adapters.persitence.FranquiciaRepositoryAdapter;
+import com.accenture.franquicias_api.infraestructura.adapters.persitence.data.Franquicia;
 import com.accenture.franquicias_api.infraestructura.adapters.persitence.data.Producto;
 import com.accenture.franquicias_api.infraestructura.entrypoints.helpers.ConvertidorDTO;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ import java.util.Optional;
 @Service
 public class FranquiciaUseCase {
 
+    public static final String NO_SE_ENCONTRO_LA_FRANQUICIA_CON_NOMBRE = "No se encontró la franquicia con nombre: ";
+    public static final String NO_SE_ENCONTRO_LA_SUCURSAL_CON_NOMBRE = "No se encontró la Sucursal con nombre: ";
     private final FranquiciaRepositoryAdapter franquiciaRepositoryAdapter;
 
     public Mono<FranquiciaDTO> guardarFranquicia(FranquiciaDTO franquiciaDTO) {
@@ -29,7 +32,7 @@ public class FranquiciaUseCase {
     public Mono<FranquiciaDTO> agregarSucursal(String nombre, SucursalDTO sucursalDTO) {
 
         return franquiciaRepositoryAdapter.findFranquiciaByName(nombre)
-                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build("No se encontró la franquicia con nombre: " + nombre)))
+                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build(NO_SE_ENCONTRO_LA_FRANQUICIA_CON_NOMBRE + nombre)))
                 .map(franquicia -> {
                     franquicia.getSucursales().add(ConvertidorDTO.sucursalDTOToSucursal(sucursalDTO));
                             return franquicia;
@@ -50,7 +53,7 @@ public class FranquiciaUseCase {
                                     return franquicia;
                }).flatMap(franquiciaRepositoryAdapter::updateFranquicia)
                 .map(ConvertidorDTO::franquiciaToFranquiciaDTO)
-                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build("No se encontró la Sucursal con nombre: " + nombreSucursal)))
+                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build(NO_SE_ENCONTRO_LA_SUCURSAL_CON_NOMBRE + nombreSucursal)))
                 .collectList();
     }
 
@@ -70,7 +73,7 @@ public class FranquiciaUseCase {
                     return franquicia;
                 })
                 .flatMap(franquiciaRepositoryAdapter::updateFranquicia)
-                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build("No se encontró la Sucursal con nombre: " + nombreSucursal+ " y Producto con nombre: " + nombreProducto)))
+                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build(NO_SE_ENCONTRO_LA_SUCURSAL_CON_NOMBRE + nombreSucursal+ " y Producto con nombre: " + nombreProducto)))
                 .map(ConvertidorDTO::franquiciaToFranquiciaDTO)
                 .collectList();
     }
@@ -95,7 +98,7 @@ public class FranquiciaUseCase {
     public Mono<FranquiciaDTO> obtenerMayorStock(String nombreFranquicia) {
         return franquiciaRepositoryAdapter.findFranquiciaByName(nombreFranquicia)
                 .switchIfEmpty(Mono.error(
-                        IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build("No se encontró la franquicia con nombre: " + nombreFranquicia)))
+                        IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS.build(NO_SE_ENCONTRO_LA_FRANQUICIA_CON_NOMBRE + nombreFranquicia)))
                 .map(franquicia -> {
                     franquicia.getSucursales().forEach(sucursal -> {
                         Optional<Producto> maxProducto = sucursal.getProductos().stream()
@@ -108,5 +111,24 @@ public class FranquiciaUseCase {
                 })
                 .map(ConvertidorDTO::franquiciaToFranquiciaDTO);
     }
+
+    public Mono<FranquiciaDTO> actualizarNombreFranquicia(String actualNombreFranquicia, String nuevoNombreFranquicia) {
+        return franquiciaRepositoryAdapter.findFranquiciaByName(nuevoNombreFranquicia)
+                .flatMap(f -> Mono.<Franquicia>error(IntegracionExcepcion.Type.ERROR_ELEMENTO_DUPLICADO
+                        .build("Ya existe una franquicia con el nombre: " + nuevoNombreFranquicia)))
+                .switchIfEmpty(Mono.defer(() ->
+                        franquiciaRepositoryAdapter.findFranquiciaByName(actualNombreFranquicia)
+                                .switchIfEmpty(Mono.error(IntegracionExcepcion.Type.NO_SE_ENCONTRARON_RESULTADOS
+                                        .build(NO_SE_ENCONTRO_LA_FRANQUICIA_CON_NOMBRE + actualNombreFranquicia)))
+                ))
+                .map(franquicia -> {
+                    franquicia.setNombre(nuevoNombreFranquicia);
+                    return franquicia;
+                })
+                .flatMap(franquiciaRepositoryAdapter::updateFranquicia)
+                .map(ConvertidorDTO::franquiciaToFranquiciaDTO);
+    }
+
+
 
 }
