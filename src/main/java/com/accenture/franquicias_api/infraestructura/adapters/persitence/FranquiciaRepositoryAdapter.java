@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -40,8 +41,8 @@ public class FranquiciaRepositoryAdapter {
                 });
     }
 
-    public Mono<Franquicia> updateFranquicia(String id, Franquicia franquicia) { // TODO: revisaar si se necesita luego
-        Query query = Query.query(Criteria.where("id").is(id));
+    public Mono<Franquicia> updateFranquicia(Franquicia franquicia) {
+        Query query = Query.query(Criteria.where("id").is(franquicia.getId()));
 
         Update update = new Update()
                 .set("nombre", franquicia.getNombre())
@@ -50,7 +51,7 @@ public class FranquiciaRepositoryAdapter {
         return mongoTemplate.updateFirst(query, update, Franquicia.class)
                 .flatMap(result -> {
                     if (result.getModifiedCount() > 0) {
-                        return mongoTemplate.findById(id, Franquicia.class);
+                        return mongoTemplate.findById(franquicia.getId(), Franquicia.class);
                     } else {
                         return Mono.empty();
                     }
@@ -59,6 +60,10 @@ public class FranquiciaRepositoryAdapter {
                     logger.error("Error al actualizar franquicia: {}", error.getMessage());
                     return Mono.error(error);
                 });
+    }
+
+    public Flux<Franquicia> obtenerFranquicias() {
+        return mongoTemplate.findAll(Franquicia.class);
     }
 
 }
