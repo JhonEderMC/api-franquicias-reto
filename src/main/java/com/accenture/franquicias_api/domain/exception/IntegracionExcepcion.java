@@ -21,10 +21,6 @@ public class IntegracionExcepcion extends RuntimeException {
             return new IntegracionExcepcion(this, this.getErrorTecnico() + ": " + errorTecnico);
         }
 
-        public IntegracionExcepcion build() {
-            return new IntegracionExcepcion(this);
-        }
-
     }
 
     private final Type type;
