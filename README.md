@@ -6,5 +6,6 @@ En el siguiente documento encontraras la solucion de la api de franquicias:
 * Los casos de uso se encuentra en [FranquiciaUseCase](src/main/java/com/accenture/franquicias_api/domain/usecases/FranquiciaUseCase.java).
 * Se utilizo una [base de datos](FranquiciaRepositoryAdapter) mongo en la nube, se conecta mediante cadena de strings.
 * En el archivo yaml se encuentran las variables de entorno o configuracion. No se utilizo un enviroment ya que no se alcanzo a desplegar en la nube.
+* Para utitilizar la aplicacion se debe correr el [FranquiciasApiApplication](src/main/java/com/accenture/franquicias_api/FranquiciasApiApplication.java) y esta listo para probar. Si hay errores en la base de datos posiblmente sean por la IP que se conecta a la db, puedes simplemente agregar cualquer otra de mongo o conectarte a la existente y agregando tu IP. (No siempre mongo deja permitir todas las ips)
 * Se añaden colleccion de [postman](java/com/accenture/franquicias_api/postman/Accenture Franquicias.postman_collection.json) para probar la api.
 * Se crearon pruebas unitarias de los flujos principales.
