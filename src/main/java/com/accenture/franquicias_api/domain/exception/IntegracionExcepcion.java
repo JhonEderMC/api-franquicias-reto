@@ -11,7 +11,8 @@ public class IntegracionExcepcion extends RuntimeException {
     public enum Type {
         ERROR_DB_TRANSACTION("Error en la transacción con la base de datos"),
         ERROR_EN_PETICION("Error en la petición al servicio"),
-        NO_SE_ENCONTRARON_RESULTADOS("No se encontraron resultados");
+        NO_SE_ENCONTRARON_RESULTADOS("No se encontraron resultados"),
+        ERROR_ELEMENTO_DUPLICADO("El elemento ya existe");
 
 
         private final String errorTecnico;
