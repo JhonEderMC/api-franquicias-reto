@@ -48,11 +48,15 @@ public class ConvertidorDTO {
     public static List<Producto> productosDtoToProducto(List<ProductoDTO> productosDTO) {
         return Optional.ofNullable(productosDTO).orElse(List.of())
                 .stream()
-                .map(productoDTO -> Producto.builder()
-                        .nombre(productoDTO.getNombre())
-                        .stock(productoDTO.getStock())
-                        .build())
+                .map(ConvertidorDTO::productoDtoToProducto)
                 .toList();
+    }
+
+    public static Producto productoDtoToProducto(ProductoDTO productoDTO) {
+        return Producto.builder()
+                .nombre(productoDTO.getNombre())
+                .stock(productoDTO.getStock())
+                .build();
     }
 
     public static List<SucursalDTO> sucursalesToSucursalesDTO(List<Sucursal> sucursales) {
@@ -69,11 +73,15 @@ public class ConvertidorDTO {
     private static List<ProductoDTO> productosToProductosDTO(List<Producto> productos) {
         return Optional.ofNullable(productos).orElse(List.of())
                 .stream()
-                .map(producto -> ProductoDTO.builder()
-                        .nombre(producto.getNombre())
-                        .stock(producto.getStock())
-                        .build())
+                .map(ConvertidorDTO::productoDtoToProducto)
                 .toList();
+    }
+
+    private static ProductoDTO productoDtoToProducto(Producto producto) {
+        return ProductoDTO.builder()
+                .nombre(producto.getNombre())
+                .stock(producto.getStock())
+                .build();
     }
 
 }
