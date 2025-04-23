@@ -1,8 +1,8 @@
 package com.accenture.franquicias_api.infraestructura.entrypoints.helpers;
 
-import com.accenture.franquicias_api.application.dto.FranquiciaDTO;
-import com.accenture.franquicias_api.application.dto.ProductoDTO;
-import com.accenture.franquicias_api.application.dto.SucursalDTO;
+import com.accenture.franquicias_api.application.dto.franquicia.FranquiciaDTO;
+import com.accenture.franquicias_api.application.dto.franquicia.ProductoDTO;
+import com.accenture.franquicias_api.application.dto.franquicia.SucursalDTO;
 import com.accenture.franquicias_api.infraestructura.adapters.persitence.data.Franquicia;
 import com.accenture.franquicias_api.infraestructura.adapters.persitence.data.Producto;
 import com.accenture.franquicias_api.infraestructura.adapters.persitence.data.Sucursal;
@@ -19,30 +19,34 @@ public class ConvertidorDTO {
     public static Franquicia franquiciaDTOToFranquicia(FranquiciaDTO franquiciaDTO) {
         return Franquicia.builder()
                 .nombre(franquiciaDTO.getNombre())
-                .sucursales(getSucursales(franquiciaDTO))
+                .sucursales(sucursalesDtoToSucursales(franquiciaDTO.getSucursales()))
                 .build();
     }
 
     public static FranquiciaDTO franquiciaToFranquiciaDTO(Franquicia franquicia) {
         return FranquiciaDTO.builder()
                 .nombre(franquicia.getNombre())
-                .sucursales(getSucursalesDTO(franquicia))
+                .sucursales(sucursalesToSucursalesDTO(franquicia.getSucursales()))
                 .build();
     }
 
-    private static List<Sucursal> getSucursales(FranquiciaDTO franquiciaDTO) {
-        return  Optional.ofNullable(franquiciaDTO.getSucursales()).orElse(List.of())
+    public static List<Sucursal> sucursalesDtoToSucursales(List<SucursalDTO> sucursalesDTO) {
+        return  Optional.ofNullable(sucursalesDTO).orElse(List.of())
                 .stream()
-                .map(sucursalDTO -> Sucursal.builder()
-                        .nombre(sucursalDTO.getNombre())
-                        .productos(getProductos(sucursalDTO))
-                        .build())
+                .map(ConvertidorDTO::sucursalDTOToSucursal)
                 .toList();
 
     }
 
-    private static List<Producto> getProductos(SucursalDTO sucursalDTO) {
-        return Optional.ofNullable(sucursalDTO.getProductos()).orElse(List.of())
+    public static Sucursal sucursalDTOToSucursal(SucursalDTO sucursalDTO) {
+        return Sucursal.builder()
+                .nombre(sucursalDTO.getNombre())
+                .productos(productosDtoToProducto(sucursalDTO.getProductos()))
+                .build();
+    }
+
+    public static List<Producto> productosDtoToProducto(List<ProductoDTO> productosDTO) {
+        return Optional.ofNullable(productosDTO).orElse(List.of())
                 .stream()
                 .map(productoDTO -> Producto.builder()
                         .nombre(productoDTO.getNombre())
@@ -51,19 +55,19 @@ public class ConvertidorDTO {
                 .toList();
     }
 
-    private static List<SucursalDTO> getSucursalesDTO(Franquicia franquicia) {
-        return  Optional.ofNullable(franquicia.getSucursales()).orElse(List.of())
+    public static List<SucursalDTO> sucursalesToSucursalesDTO(List<Sucursal> sucursales) {
+        return  Optional.ofNullable(sucursales).orElse(List.of())
                 .stream()
                 .map(sucursal -> SucursalDTO.builder()
                         .nombre(sucursal.getNombre())
-                        .productos(getProductosDTO(sucursal))
+                        .productos(productosToProductosDTO(sucursal.getProductos()))
                         .build())
                 .toList();
 
     }
 
-    private static List<ProductoDTO> getProductosDTO(Sucursal sucursal) {
-        return Optional.ofNullable(sucursal.getProductos()).orElse(List.of())
+    private static List<ProductoDTO> productosToProductosDTO(List<Producto> productos) {
+        return Optional.ofNullable(productos).orElse(List.of())
                 .stream()
                 .map(producto -> ProductoDTO.builder()
                         .nombre(producto.getNombre())
@@ -71,4 +75,5 @@ public class ConvertidorDTO {
                         .build())
                 .toList();
     }
+
 }
