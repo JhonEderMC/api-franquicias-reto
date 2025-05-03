@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "43fff5f7-9610-4089-9d3f-3737b41f15df",
 		"name": "Accenture Franquicias",
+		"description": "Revisa la documentacion en la colleccion de Franquicias",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "13619370"
 	},
@@ -24,11 +25,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api-franquicias/franquicia",
+							"raw": "{{urlBase}}/api-franquicias/franquicia",
 							"host": [
-								"localhost"
+								"{{urlBase}}"
 							],
-							"port": "8080",
 							"path": [
 								"api-franquicias",
 								"franquicia"
@@ -52,11 +52,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api-franquicias/franquicia/agregar/sucursal?nombre=franquicia1",
+							"raw": "{{urlBase}}/api-franquicias/franquicia/agregar/sucursal?nombre=franquicia1",
 							"host": [
-								"localhost"
+								"{{urlBase}}"
 							],
-							"port": "8080",
 							"path": [
 								"api-franquicias",
 								"franquicia",
@@ -88,11 +87,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api-franquicias/franquicia/eliminar/producto/sucursal?nombreSucursal=producto1&nombreProducto=uva",
+							"raw": "{{urlBase}}/api-franquicias/franquicia/eliminar/producto/sucursal?nombreSucursal=producto1&nombreProducto=uva",
 							"host": [
-								"localhost"
+								"{{urlBase}}"
 							],
-							"port": "8080",
 							"path": [
 								"api-franquicias",
 								"franquicia",
@@ -120,11 +118,10 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api-franquicias/franquicia/actualizar/producto?nombreProducto=leche&stock=10",
+							"raw": "{{urlBase}}/api-franquicias/franquicia/actualizar/producto?nombreProducto=leche&stock=10",
 							"host": [
-								"localhost"
+								"{{urlBase}}"
 							],
-							"port": "8080",
 							"path": [
 								"api-franquicias",
 								"franquicia",
@@ -151,11 +148,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api-franquicias/franquicia/obtener/mayorStock?nombreFranquicia=franquicia10",
+							"raw": "{{urlBase}}/api-franquicias/franquicia/obtener/mayorStock?nombreFranquicia=franquicia10",
 							"host": [
-								"localhost"
+								"{{urlBase}}"
 							],
-							"port": "8080",
 							"path": [
 								"api-franquicias",
 								"franquicia",
@@ -178,11 +174,10 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api-franquicias/franquicia/actualizar/nombreFranquicia?actualNombreFranquicia=franquicia3&nuevoNombreFranquicia=franquicia7",
+							"raw": "{{urlBase}}/api-franquicias/franquicia/actualizar/nombreFranquicia?actualNombreFranquicia=franquicia3&nuevoNombreFranquicia=franquicia7",
 							"host": [
-								"localhost"
+								"{{urlBase}}"
 							],
-							"port": "8080",
 							"path": [
 								"api-franquicias",
 								"franquicia",
@@ -209,11 +204,10 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api-franquicias/franquicia/actualizar/nombreSucursal?actualNombreSucursal=sucursal10&nuevoNombreSucursal=sucursal1",
+							"raw": "{{urlBase}}/api-franquicias/franquicia/actualizar/nombreSucursal?actualNombreSucursal=sucursal10&nuevoNombreSucursal=sucursal1",
 							"host": [
-								"localhost"
+								"{{urlBase}}"
 							],
-							"port": "8080",
 							"path": [
 								"api-franquicias",
 								"franquicia",
@@ -240,11 +234,10 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api-franquicias/franquicia/actualizar/nombreProducto?actualNombreProducto=atun&nuevoNombreProducto=leche",
+							"raw": "{{urlBase}}/api-franquicias/franquicia/actualizar/nombreProducto?actualNombreProducto=atun&nuevoNombreProducto=leche",
 							"host": [
-								"localhost"
+								"{{urlBase}}"
 							],
-							"port": "8080",
 							"path": [
 								"api-franquicias",
 								"franquicia",
@@ -265,7 +258,37 @@
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "# **Franquicias Coleccion**\n\nEsta es una colección de request para la api de Franquicias. Encontraras desde el crear una Franquicia, agregar una sucursal, producto hasta consultar, actualizar o elimintar.\n\nconfigura la **urlBase**, esta tiene dos valores:\n\n| **localhost** | localhost:8000 |\n| --- | --- |\n| nube render | [https://api-franquicias-reto.onrender.com](https://api-franquicias-reto.onrender.com) |"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "urlBase",
+			"value": "https://api-franquicias-reto.onrender.com",
+			"type": "default"
 		}
 	]
 }
