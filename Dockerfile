@@ -2,7 +2,7 @@
 FROM gradle:8.3.0-jdk17 AS build
 WORKDIR /app
 COPY . .
-RUN gradle bootJar --no-daemon
+RUN gradle bootJar --no-daemon --stacktrace --info
 
 # Etapa de ejecución
 FROM openjdk:21-jdk-slim
