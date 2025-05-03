@@ -1,11 +1,13 @@
-FROM ubuntu:latest AS build
-RUN apt-get update
-RUN apt-get install openjdk-21-jdk -y
+# Etapa de construcción
+FROM gradle:8.3-jdk-21 AS build
+WORKDIR /app
 COPY . .
-RUN ./gradlew bootJar --no-daemon
+RUN gradle bootJar --no-daemon
 
+# Etapa de ejecución
 FROM openjdk:21-jdk-slim
+WORKDIR /app
 EXPOSE 8080
-COPY --from=build /build/libs/franquicias-api-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/build/libs/franquicias-api-0.0.1-SNAPSHOT.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
