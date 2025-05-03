@@ -1,5 +1,5 @@
 # Etapa de construcción
-FROM gradle:8.3-jdk-21 AS build
+FROM gradle:8.3.0-jdk17 AS build
 WORKDIR /app
 COPY . .
 RUN gradle bootJar --no-daemon
